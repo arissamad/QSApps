@@ -1,0 +1,33 @@
+.reminderComponent {
+    font-size: 0.9em;
+    border: 1px solid grey;
+    border-radius: 2px;
+}
+
+.reminderComponent .reminder-table {
+    width: 100%;
+}
+
+.reminderComponent .date-column {
+    padding: 5px 5px;
+	width: 100px;
+}
+
+.reminderComponent .details-column {
+    padding: 5px 5px;
+}
+
+.reminderComponent .donor-name {
+    color: #42AAD3;
+    font-size: 1.1em;
+    margin-top: -1px;
+    cursor: pointer;
+}
+
+.reminderComponent .donor-name:hover {
+    text-decoration: underline;
+}
+
+.reminderComponent .edit-link {
+    float: right;
+}
