@@ -9,7 +9,7 @@ function TransactionHistory(studentInfo, showDelete) {
     if(showDelete != null) this.showDelete = showDelete;
 
 	this.dialog = new FullPageDialog();
-	var recordHeader = new RecordHeaderWidget("Transactions for " + studentInfo.getData("fullName"));
+	var recordHeader = new RecordHeaderWidget("Transactions for " + studentInfo.fullName);
 	recordHeader.activateRightBorderSection();
 
 	var panel = new HorizontalPanelWidget("right", false);
@@ -23,7 +23,7 @@ function TransactionHistory(studentInfo, showDelete) {
 	this.dialog.resetInsertPosition();
     this.overallTableMarker = new MarkerWidget();
 
-	var metisLoader = new MetisLoader("StudentPackets", studentInfo.getData("smsStudentStubId"));
+	var metisLoader = new MetisLoader("StudentPackets", studentInfo.id);
     
     Metis.load(metisLoader, this, function() {
         var studentPacket = metisLoader.get();
@@ -190,7 +190,7 @@ TransactionHistory.prototype.deleteTransaction = function(tx) {
 };
 
 TransactionHistory.prototype.confirmDelete = function() {
-    var metisLoader = new MetisLoader("StudentPackets", this.studentInfo.getData("smsStudentStubId"));
+    var metisLoader = new MetisLoader("StudentPackets", this.studentInfo.id);
     
     Metis.load(metisLoader, this, function() {
         var studentPacket = metisLoader.get();

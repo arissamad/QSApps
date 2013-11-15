@@ -5,13 +5,7 @@ function StudentListing() {
     this.currentClassFormId = null;
     this.balanceFieldLookup = new MapClass();
     
-    var attributeSelector = new AttributeSelectorClass();
-    attributeSelector.addAttributes(["smsClassFormId", "classFormName"]);
-    
-    var rmi = new RMIUtilityClass(new Loadable());
-	rmi.setSuccessHandler(this, "loadedClassForms");
-	rmi.setArguments(attributeSelector);
-	rmi.remoteBeanCall("SMSClassFormAdmin", "getSMSClassFormListForClassesInActiveAcademicSemester");
+    Rest.get("/sms/v1/homerooms", {}, this, "loadedClassForms");
 }
 
 StudentListing.prototype.loadedClassForms = function(classForms) {
@@ -22,7 +16,7 @@ StudentListing.prototype.loadedClassForms = function(classForms) {
     
     for(var i=0; i<this.classForms.length; i++) {
         var classForm = this.classForms[i];
-        formFilter.add(classForm, classForm.getData("classFormName"));
+        formFilter.add(classForm, classForm.name);
     }
 
     new LineBreakWidget();
@@ -38,7 +32,7 @@ StudentListing.prototype.loadedClassForms = function(classForms) {
         
         var balanceField = $("<span class='balance-field'>Loading...</span>")
         balanceField.data("studentInfo", studentInfo);
-        this.balanceFieldLookup.put(studentInfo.getData("smsStudentStubId"), balanceField);
+        this.balanceFieldLookup.put(studentInfo.id, balanceField);
         
         current.append(balanceField);
 	});
@@ -59,6 +53,7 @@ StudentListing.prototype.loadedClassForms = function(classForms) {
 	as.addAttributes(["smsStudentStubId", "fullName", "className", "formTeacher",
 	    	"smsStudentFinancialId", "outstandingAmount", "formattedFinancialTotalOutstanding"]);
 	
+    /*
 	this.studentTable.setTableLoader(function(rmi, tableParameters, searchParameters) {
         
         if(this.currentClassFormId != null) {
@@ -71,6 +66,17 @@ StudentListing.prototype.loadedClassForms = function(classForms) {
         	rmi.remoteBeanCall("SMSStudentAdmin", "getAllActiveStudents");    
         }
 	});
+    */
+    
+    this.studentTable.setRestLoader(function(settings, callback) {
+        settings.fields = "formTeacher";
+        
+        if(this.currentClassFormId != null) {
+            settings.homeroomId = this.currentClassFormId;
+        }
+        
+        Rest.get("/sms/v1/students", settings, callback); 
+    });
 	
     this.studentTable.setPostRender(this, "fillInBalances");
 	this.studentTable.render();
@@ -95,7 +101,7 @@ StudentListing.prototype.fillInBalances = function() {
         var balanceField = $(balanceFields[i]);
         var studentInfo = balanceField.data("studentInfo");
         
-        var metisLoader = new MetisLoader("StudentPackets", studentInfo.getData("smsStudentStubId"));
+        var metisLoader = new MetisLoader("StudentPackets", studentInfo.id);
         metisLoader.balanceField = balanceField;
         
         metisLoaders.push(metisLoader);
@@ -132,9 +138,9 @@ StudentListing.prototype.clickedAddPayment = function(studentInfo) {
 };
 
 StudentListing.prototype.updateSingleStudent = function(studentInfo) {
-    var metisLoader = new MetisLoader("StudentPackets", studentInfo.getData("smsStudentStubId"));
+    var metisLoader = new MetisLoader("StudentPackets", studentInfo.id);
     
-    var balanceField = this.balanceFieldLookup.get(studentInfo.getData("smsStudentStubId"));    
+    var balanceField = this.balanceFieldLookup.get(studentInfo.id);    
     if(balanceField == null) return;
     
     balanceField.setText("");
@@ -157,7 +163,8 @@ StudentListing.prototype.filterByClassForm = function(classForm) {
         this.showAll();
         return;
     }
-    this.currentClassFormId = classForm.getData("smsClassFormId");
+    
+    this.currentClassFormId = classForm.id;
     this.studentTable.refreshTable();
 };
 

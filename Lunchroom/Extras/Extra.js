@@ -1,5 +1,5 @@
 function Extra() {
-    this.id = generateId();
+    this.id;
     this.name;
     this.price;
 }

@@ -15,9 +15,9 @@ function AddTransaction(addOrEdit, type, studentInfo, meals, extras) {
     
     var recordHeader;
     if(addOrEdit == "add") {
-        recordHeader = new RecordHeaderWidget("Add " + this.type + " for " + studentInfo.getData("fullName"));
+        recordHeader = new RecordHeaderWidget("Add " + this.type + " for " + studentInfo.fullName);
     } else {
-        recordHeader = new RecordHeaderWidget("Edit " + this.type + " for " + studentInfo.getData("fullName"));
+        recordHeader = new RecordHeaderWidget("Edit " + this.type + " for " + studentInfo.fullName);
     }
     
     recordHeader.activateRightBorderSection();
@@ -131,14 +131,14 @@ AddTransaction.prototype.updateCharge = function() {
 AddTransaction.prototype.clickedSave = function() {
     if(!this.queryFields.verify()) return false;
     
-    var metisLoader = new MetisLoader("StudentPackets", this.studentInfo.getData("smsStudentStubId"));
+    var metisLoader = new MetisLoader("StudentPackets", this.studentInfo.id);
     Metis.load(metisLoader, this, function() {
         
         var studentPacket = metisLoader.get();
         
         if(studentPacket == null) {
             studentPacket = new StudentPacket();
-            studentPacket.setSmsStudentStubId(this.studentInfo.getData("smsStudentStubId"));
+            studentPacket.setSmsStudentStubId(this.studentInfo.id);
         }
         
         var nextId = studentPacket.getNextTransactionId();
