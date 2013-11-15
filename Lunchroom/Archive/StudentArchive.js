@@ -9,11 +9,11 @@ function StudentArchive(archive, studentInfo, studentPacket) {
     
     
     if(archive != null && studentInfo != null) {
-        this.id = archive.getId() + "-" + studentInfo.getData("smsStudentStubId");
+        this.id = archive.getId() + "-" + studentInfo.id;
         this.archiveId = archive.getId();
         
-        this.smsStudentStubId = studentInfo.getData("smsStudentStubId");
-        this.name = studentInfo.getData("fullName");
+        this.smsStudentStubId = studentInfo.id;
+        this.name = studentInfo.fullName;
     }
     
     this.balance = 0;

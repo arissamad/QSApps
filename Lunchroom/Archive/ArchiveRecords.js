@@ -84,9 +84,9 @@ ArchiveRecords.prototype.renderArchiveTable = function() {
     table.addColumn(function(archive) {
         var hpanel = new HorizontalPanelWidget(false);
         new ButtonWidget("See Archived Lunch Orders", this, "clickedViewArchive", archive);
-        new ButtonWidget("Test Archive", this, function() {
+        /*new ButtonWidget("Test Archive", this, function() {
             new CreateArchive(archive);
-        })
+        });*/
         hpanel.finish();
     });
     

@@ -9,8 +9,10 @@ function CreateArchive(archive, option) {
     
     this.loadingWidget = new LoadingWidget("Archiving lunch orders... This will take a few minutes.");
     
+    Rest.get("/sms/v1/students", {itemsPerPage: 1000}, this, "loadedStudents");
+    
     // First, load all students
-    var as = new AttributeSelectorClass();
+    /*var as = new AttributeSelectorClass();
     as.addAttributes(["smsStudentStubId", "fullName"]);
     
     var tableParameters = new TableParametersDataClass();
@@ -21,17 +23,19 @@ function CreateArchive(archive, option) {
     var rmi = new RMIUtilityClass(false);
     rmi.setSuccessHandler(this, "loadedStudents");
 	rmi.setArguments(as, tableParameters, searchParameters);
-    rmi.remoteBeanCall("SMSStudentAdmin", "getAllActiveStudents");
+    rmi.remoteBeanCall("SMSStudentAdmin", "getAllActiveStudents");*/
 }
 
-CreateArchive.prototype.loadedStudents = function(studentPagedList) {
-    students = studentPagedList.getList();
+CreateArchive.prototype.loadedStudents = function(pagedStudents) {
+    //students = studentPagedList.getList();
+    var students = pagedStudents.list;
     log("Students: ", students);
+    debugger;
     
     var studentMap = new MapClass();
     for(var i=0; i<students.length; i++) {
         var studentInfo = students[i];
-        studentMap.put(studentInfo.getData("smsStudentStubId"), studentInfo);
+        studentMap.put(studentInfo.id, studentInfo);
     }
     
     // Now load all student packets

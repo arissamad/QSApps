@@ -1,3 +1,4 @@
+// This appears in the parent portal.
 function LunchAccount() {
 	// Constructor code here
     new PageHeaderWidget("Lunch Account");
