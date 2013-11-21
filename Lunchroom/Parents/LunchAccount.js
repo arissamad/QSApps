@@ -53,6 +53,9 @@ LunchAccount.prototype.render = function() {
         new TextWidget("Lunch Account Balance: $ " + balance.toFixed(2));
         new SpaceWidget();
         new LinkWidget("See history", this, function(student) {
+            
+            // [2013-11-10] Temp fix until REST call can be used.
+            student.id = student.smsStudentStubId;
             var dialog = new TransactionHistory(student, false);
         }, student);
         

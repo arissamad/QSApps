@@ -25,7 +25,7 @@ StudentListing.prototype.loadedClassForms = function(classForms) {
     formFilter.getSearchWidget().setTable(this.studentTable);
     
 	this.studentTable.addHeader("Student", "fullName", true, true, 400);
-	this.studentTable.addColumn($H("<em>" + "${fullName}" + "</em>" +"\n${className} - ${formTeacher}"));
+	this.studentTable.addColumn($H("<em>" + "${fullName}" + "</em>" +"\n${className} - ${homeroomTeacher}"));
 	
 	this.studentTable.addHeader("Balance", "balance", false, true, 100);
 	this.studentTable.addColumn(function(studentInfo) {
@@ -69,10 +69,20 @@ StudentListing.prototype.loadedClassForms = function(classForms) {
     */
     
     this.studentTable.setRestLoader(function(settings, callback) {
-        settings.fields = "formTeacher";
+        settings.fields = "homeroomTeacher";
         
         if(this.currentClassFormId != null) {
             settings.homeroomId = this.currentClassFormId;
+        }
+        
+        var searchWidget = formFilter.getSearchWidget();
+        
+        // Future:
+        //var searchValue = searchWidget.getValue();
+        var searchValue = jQuery.trim(searchWidget.input.val());
+        
+        if(searchValue != "") {
+            settings.search = searchValue;
         }
         
         Rest.get("/sms/v1/students", settings, callback); 
@@ -86,10 +96,7 @@ StudentListing.prototype.loadedClassForms = function(classForms) {
     var metisLoader2 = new MetisLoader("Extras");
     Metis.load([metisLoader1, metisLoader2], this, function() {
         this.meals = metisLoader1.getList();
-        log("Meals: ", this.meals);
-        
         this.extras = metisLoader2.getList();
-        log("Extras: ", this.extras);
     });   
 }
 
